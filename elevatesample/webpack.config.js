@@ -1,0 +1,65 @@
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const webpack = require('webpack');
+const mf = require("@angular-architects/module-federation/webpack");
+const path = require("path");
+const share = mf.share;
+const shareAll=mf.shareAll
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+  path.join(__dirname, 'tsconfig.json'),
+  [/* mapped paths to share */]);
+
+module.exports = {
+  output: {
+    uniqueName: "elevatesample",
+    publicPath: "auto",
+   
+  },
+  optimization: {
+    runtimeChunk: false
+  },   
+  resolve: {
+    alias: {
+      ...sharedMappings.getAliases(),
+    }
+  },
+  experiments: {
+    outputModule: true
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      ngDevMode: "undefined",
+  }),
+    new ModuleFederationPlugin({
+        library: { type: "module" },
+
+        // For remotes (please adjust)
+        // name: "elevate",
+        // filename: "remoteEntry.js",
+        // exposes: {
+        //     './Component': './/src/app/app.component.ts',
+        // },        
+        
+        // // For hosts (please adjust)
+        // remotes: {
+        //     "elevateCommerce": "http://localhost:4201/remoteEntry.js",
+
+        // },
+
+        shared: share({
+          "@angular/core": { singleton: true, requiredVersion: 'auto' }, 
+          "@angular/common": { singleton: true,  requiredVersion: 'auto' }, 
+          "@angular/common/http": { singleton: true,  requiredVersion: 'auto' }, 
+          "@angular/router": { singleton: true,  requiredVersion: 'auto' },
+
+          ...sharedMappings.getDescriptors()
+        })
+        // shared: {
+        //   ...shareAll({ singleton: true, requiredVersion: "auto" }),
+        // }
+        
+    }),
+    sharedMappings.getPlugin()
+  ],
+};
