@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class NewsService {
   
   
-  private baseUrl = 'https://cors-anywhere.herokuapp.com/https://chhcpportalode4.prod.acquia-sites.com'; // Your Drupal base URL
+  private baseUrl = 'https://chhcpportalode4.prod.acquia-sites.com'; // Your Drupal base URL
   private newsEndpoint = '/jsonapi/node/news'; // Assuming you're using Drupal's JSON:API module
 
   constructor(private http: HttpClient) {}
