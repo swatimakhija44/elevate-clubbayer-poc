@@ -19,6 +19,11 @@ export const routes: Routes = [
           console.error("Error loading remote module:", error);
         }),
 
-    }
+    },
+
+    {
+      path: 'iframe',
+      loadComponent: () => import('./iframe/iframe.component').then(m => m.IframeComponent)
+    },
   
 ];
