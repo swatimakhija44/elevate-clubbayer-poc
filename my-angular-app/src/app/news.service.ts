@@ -6,12 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class NewsService {
-  private proxyUrl = "https://cors-anywhere.herokuapp.com/"
   public baseUrl = "https://chhcpportalode4.prod.acquia-sites.com";
-  public targetUrl = `${this.proxyUrl}https://chhcpportalode4.prod.acquia-sites.com`;
   private tokenUrl = `${this.baseUrl}/oauth/token`;
-  private newsUrl = `${this.targetUrl}/jsonapi/node/news`;
-  private fileUrl = `${this.targetUrl}/jsonapi/file/mime_attachment_binary`;
+  private newsUrl = `${this.baseUrl}/jsonapi/node/news`;
+  private fileUrl = `${this.baseUrl}/jsonapi/file/mime_attachment_binary`;
  
   constructor(private http: HttpClient) {}
  
