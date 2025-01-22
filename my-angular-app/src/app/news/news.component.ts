@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsService } from '../news.service';
- 
+
 @Component({
   selector: 'app-news',
   standalone: true,
@@ -11,49 +11,37 @@ import { NewsService } from '../news.service';
 })
 export class NewsComponent implements OnInit {
   articles: any[] = [];
-  source: any[] =[];
-  loading = true;
   images: string[] = [];
+  loading: boolean = true;
   error: string | null = null;
-  
- 
+
   constructor(private newsService: NewsService) {}
- 
+
   ngOnInit() {
     this.fetchArticles();
   }
- 
- 
-  fetchArticles(): void {
-    this.newsService.fetchToken().subscribe((tokenData) => {
-        if (tokenData && tokenData.access_token) {
-          this.newsService.getNews(tokenData.access_token).subscribe((newsData) => {
-              this.articles = newsData?.data || [];
-              this.loading = false;
-              this.fetchImages(this.articles, tokenData.access_token);
-            },
-            (error) => {
-              console.error('Error fetching news:', error);
-              this.loading = false;
-            }
-          );
-        } else {
-          this.loading = false;
-        }
+
+  fetchArticles() {
+    this.newsService.getNews().subscribe(
+      (data) => {
+        this.articles = data?.data || [];
+        this.loading = false;
+        this.fetchImages(); // Fetch images once articles are loaded
       },
       (error) => {
-        console.error('Error fetching token:', error);
+        this.error = 'Failed to load articles';
         this.loading = false;
       }
     );
   }
- 
-  
-  fetchImages(newsItems: any[], token: string): void {
+
+  // Fetch images for each article
+  fetchImages() {
     const imageIds = this.articles.map((item) => item.relationships?.field_news_image?.data?.id);
+    // Fetch image URLs asynchronously for each image ID
     this.images = [];
     imageIds.forEach((id, index) => {
-      this.newsService.getImageUrl(id,token).subscribe(
+      this.newsService.getImageUrl(id).subscribe(
         (response) => {
           this.images[index] = response?.data?.attributes?.uri?.url || '';
         },
