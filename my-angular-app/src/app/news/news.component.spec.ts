@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 import { NewsComponent } from './news.component';
 import { NewsService } from '../news.service';
 import { of, throwError } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environments';
 
 describe('NewsComponent', () => {
   let component: NewsComponent;
@@ -10,21 +11,12 @@ describe('NewsComponent', () => {
   let mockNewsService: jasmine.SpyObj<NewsService>;
 
   beforeEach(() => {
-    // Create the mock NewsService
-    mockNewsService = jasmine.createSpyObj('NewsService', ['getNews', 'getImageUrl']);
- // Mock the getNews method to return an observable
- mockNewsService.getNews.and.returnValue(of({
-  data: [{type: "node--news", id: "dd1ab18a-d568-487a-82a7-10c437efef8a", attributes
-    :{title: 'ss'}, relationships: {field_news_image:{data:{id:"ddd", meta:{title: "ss"}}},body: {value: 'sss'}}}]
-}));
+    // Create a spy for the NewsService
+    mockNewsService = jasmine.createSpyObj('NewsService', ['fetchToken', 'getNews', 'getImageUrl']);
 
-// Mock the getImageUrl method to return an observable
-mockNewsService.getImageUrl.and.returnValue(of({
-  data: { attributes: { uri: { url: 'https://example.com/image.jpg' } } }
-}));
-    // Configure the TestBed
+    // Set up the TestBed
     TestBed.configureTestingModule({
-      imports: [NewsComponent, CommonModule],  // Import NewsComponent and CommonModule
+      imports: [HttpClientModule, NewsComponent],
       providers: [
         { provide: NewsService, useValue: mockNewsService },
       ],
@@ -38,67 +30,108 @@ mockNewsService.getImageUrl.and.returnValue(of({
     expect(component).toBeTruthy();
   });
 
-  it('should load articles on ngOnInit', () => {
-    const mockResponse =  [{type: "node--news", id: "dd1ab18a-d568-487a-82a7-10c437efef8a", attributes
-      :{title: 'ss'}, relationships: {field_news_image:{data:{id:"ddd", meta:{title: "ss"}}},body: {value: 'sss'}}}];
-    
-    // Mock the NewsService's getNews method to return an observable
-    mockNewsService.getNews.and.returnValue(of({ data: mockResponse }));
+  it('should load articles successfully', () => {
+    const mockToken = 'fake-token';
+    const mockNewsData = {
+      data: [{ attributes: { title: 'Article 1', body: 'Content' } }],
+    };
 
-    // Trigger ngOnInit
+
+    mockNewsService.fetchToken.and.returnValue(of(mockToken));
+
+    mockNewsService.getNews.and.returnValue(of(mockNewsData));
+
+
     component.ngOnInit();
     fixture.detectChanges();
 
-    // Test that the articles are loaded
+
     expect(component.articles.length).toBe(1);
-    
+    expect(component.articles[0].attributes.title).toBe('Article 1');
+    expect(component.loading).toBeFalse();
   });
 
-  it('should handle error when loading articles', () => {
-    // Mock the NewsService's getNews method to simulate an error
-    mockNewsService.getNews.and.returnValue(throwError('Error loading articles'));
+  it('should handle error when fetching token fails', () => {
+
+    mockNewsService.fetchToken.and.returnValue(throwError('Token error'));
 
     component.ngOnInit();
     fixture.detectChanges();
 
-    // Test that the error is handled correctly
-    expect(component.error).toBe('Failed to load articles');
-    expect(component.loading).toBe(false);
+
+    expect(component.loading).toBeFalse();
+    expect(component.error).toBe('Failed to retrieve a valid token.');
   });
 
-  it('should fetch images after articles are loaded', () => {
-    const mockResponse =  [{type: "node--news", id: "dd1ab18a-d568-487a-82a7-10c437efef8a", attributes
-      :{title: 'ss'}, relationships: {field_news_image:{data:{id:"ddd", meta:{title: "ss"}}},body: {value: 'sss'}}}];
-    
-    const mockImageResponse = { data: { attributes: { uri: { url: 'image_url' } } } };
+  it('should handle error when fetching news fails', () => {
+    const mockToken = 'fake-token';
 
-    // Mock the NewsService's getNews and getImageUrl methods
-    mockNewsService.getNews.and.returnValue(of({ data: mockResponse }));
-    mockNewsService.getImageUrl.and.returnValue(of(mockImageResponse));
 
-    // Trigger ngOnInit
+    mockNewsService.fetchToken.and.returnValue(of(mockToken));
+
+    mockNewsService.getNews.and.returnValue(throwError('News fetching error'));
+
     component.ngOnInit();
     fixture.detectChanges();
 
-    // Test that images are fetched
+
+    expect(component.loading).toBeFalse();
+    expect(component.error).toBe('Failed to load news.');
+  });
+
+  it('should fetch images for articles', () => {
+    const mockToken = '133';
+    const mockNewsData = {
+      data: [
+        {
+          relationships: { field_news_image: { data: { id: 'image-id' } } },
+          attributes: { title: 'Article 1', body: 'Content' },
+        },
+      ],
+    };
+
+    const mockImageData = {
+      data: { attributes: { uri: { url: `${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary` } } },
+    };
+
+
+    mockNewsService.fetchToken.and.returnValue(of(mockToken));
+
+    mockNewsService.getNews.and.returnValue(of(mockNewsData));
+
+    mockNewsService.getImageUrl.and.returnValue(of(mockImageData));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+
     expect(component.images.length).toBe(1);
-    expect(component.images[0]).toBe('image_url');
+    expect(component.images[0]).toBe(`${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary`);
   });
 
-  it('should handle error when fetching images', () => {
-    const mockResponse =  [{type: "node--news", id: "dd1ab18a-d568-487a-82a7-10c437efef8a", attributes
-      :{title: 'ss'}, relationships: {field_news_image:{data:{id:"ddd", meta:{title: "ss"}}},body: {value: 'sss'}}}];
-    
+  it('should handle error when fetching image fails', () => {
+    const mockToken = 'fake-token';
+    const mockNewsData = {
+      data: [
+        {
+          relationships: { field_news_image: { data: { id: 'image-id' } } },
+          attributes: { title: 'Article 1', body: 'Content' },
+        },
+      ],
+    };
 
-    // Mock the NewsService's getNews and getImageUrl methods
-    mockNewsService.getNews.and.returnValue(of({ data: mockResponse }));
-    mockNewsService.getImageUrl.and.returnValue(throwError('Error loading image'));
 
-    // Trigger ngOnInit
+    mockNewsService.fetchToken.and.returnValue(of(mockToken));
+
+    mockNewsService.getNews.and.returnValue(of(mockNewsData));
+
+    mockNewsService.getImageUrl.and.returnValue(throwError('Image loading error'));
+
     component.ngOnInit();
     fixture.detectChanges();
 
-    // Test that images array is still empty due to error
-    expect(component.images.length).toBe(0);
+
+    expect(component.images.length).toBe(1);
+    expect(component.error).toBeNull();
   });
 });

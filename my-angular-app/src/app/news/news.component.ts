@@ -7,12 +7,13 @@ import { NewsService } from '../news.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './news.component.html',
-  styleUrl: './news.component.css',
+  styleUrls: ['./news.component.css'],
 })
 export class NewsComponent implements OnInit {
   articles: any[] = [];
+  source: any[] = [];
+  loading = true;
   images: string[] = [];
-  loading: boolean = true;
   error: string | null = null;
 
   constructor(private newsService: NewsService) {}
@@ -21,34 +22,54 @@ export class NewsComponent implements OnInit {
     this.fetchArticles();
   }
 
-  fetchArticles() {
-    this.newsService.getNews().subscribe(
-      (data) => {
-        this.articles = data?.data || [];
-        this.loading = false;
-        this.fetchImages(); // Fetch images once articles are loaded
+  // Updated fetchArticles method using the new fetchCachedToken
+  fetchArticles(): void {
+    this.newsService.fetchToken().subscribe(
+      (token) => {
+        if (token) {
+          // Now we get the news using the cached or new token
+          this.newsService.getNews().subscribe(
+            (newsData) => {
+              this.articles = newsData?.data || [];
+              this.loading = false;
+              this.fetchImages(this.articles, token);
+            },
+            (error) => {
+              console.error('Error fetching news:', error);
+              this.loading = false;
+              this.error = 'Failed to load news.';
+            }
+          );
+        } else {
+          this.loading = false;
+          this.error = 'Failed to retrieve a valid token.';
+        }
       },
       (error) => {
-        this.error = 'Failed to load articles';
+        console.error('Error fetching token:', error);
         this.loading = false;
+        this.error = 'Failed to retrieve a valid token.';
       }
     );
   }
 
-  // Fetch images for each article
-  fetchImages() {
-    const imageIds = this.articles.map((item) => item.relationships?.field_news_image?.data?.id);
-    // Fetch image URLs asynchronously for each image ID
+  // Fetch images for the articles
+  fetchImages(newsItems: any[], token: string): void {
+    const imageIds = newsItems.map((item) => item.relationships?.field_news_image?.data?.id);
     this.images = [];
+
     imageIds.forEach((id, index) => {
-      this.newsService.getImageUrl(id).subscribe(
-        (response) => {
-          this.images[index] = response?.data?.attributes?.uri?.url || '';
-        },
-        (error) => {
-          console.error('Failed to load image', error);
-        }
-      );
+      if (id) {
+        this.newsService.getImageUrl(id).subscribe(
+          (response) => {
+            this.images[index] = response?.data?.attributes?.uri?.url || '';
+          },
+          (error) => {
+            console.error('Failed to load image', error);
+            this.images[index] = ''; // Handle failed image loading gracefully
+          }
+        );
+      }
     });
   }
 }

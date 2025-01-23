@@ -1,75 +1,129 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { NewsService } from './news.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing'; 
+import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
+import { environment } from '../environments/environments';
 import { NewsComponent } from './news/news.component';
 
-describe('NewsComponent', () => {
+describe('NewsService', () => {
   let component: NewsComponent;
-  let newsService: NewsService;
-  let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  beforeEach(() => {
-    // Create a spy for HttpClient
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-     // Configure the TestBed for the standalone component
-     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, NewsComponent], // Use HttpClientTestingModule for mocking
-      providers: [
-        NewsService,
-        { provide: HttpClient, useValue: httpClientSpy } // Use the spy for HttpClient
-      ]
-    });
+  let service: NewsService;
+  let httpMock: HttpTestingController;
 
-    // Inject the component and service
+  const mockToken = 'fake-token';
+  const mockNewsData = { data: [{ attributes: { title: 'Article 1' } }] };
+  const mockImageData = { url: `${environment.DRUPAL_BASE_URL}/file/mime_attachment_binary` };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, NewsComponent],
+      providers: [NewsService],
+    });
+    service = TestBed.inject(NewsService);
+    httpMock = TestBed.inject(HttpTestingController);
+
     component = TestBed.createComponent(NewsComponent).componentInstance;
-    newsService = TestBed.inject(NewsService);
+    service = TestBed.inject(NewsService);
   });
 
+  afterEach(() => {
+    httpMock.verify();
+  });
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
+  it('should return cached token if available and valid', () => {
+    service['TOKEN_CACHE'] = { accessToken: mockToken, expiresAt: Date.now() + 10000 };
 
-  describe('getNews', () => {
-    it('should call HttpClient.get with correct URL and headers', () => {
-      const mockResponse = [{ title: 'News article 1' }, { title: 'News article 2' }];
-      httpClientSpy.get.and.returnValue(of(mockResponse)); // Mock HTTP response
-    
-      const expectedUrl = 'https://cors-anywhere.herokuapp.com/https://chhcpportalode4.prod.acquia-sites.com/jsonapi/node/news';
-      const expectedHeaders = new HttpHeaders().set('X-Skip-Interceptor', 'true');
-      
-      newsService.getNews().subscribe((data) => {
-        expect(data).toEqual(mockResponse);
-      });
-    
-      // Check if HttpClient.get was called with the correct URL and headers
-      expect(httpClientSpy.get).toHaveBeenCalledWith(expectedUrl, { headers: expectedHeaders });
-    });
-    
-
-    it('should return an empty array if no news found', () => {
-      const mockResponse: any = [];
-      httpClientSpy.get.and.returnValue(of(mockResponse)); // Mock HTTP response
-
-      newsService.getNews().subscribe((data) => {
-        expect(data).toEqual(mockResponse);
-      });
+    service.fetchToken().subscribe((token) => {
+      expect(token).toBe(mockToken);
     });
   });
 
-  describe('getImageUrl', () => {
-    it('should call HttpClient.get with the correct fileId URL', () => {
-      const fileId = '123';
-      const mockResponse = { url: 'https://chhcpportalode4.prod.acquia-sites.com/jsonapi/file/mime_attachment_binary' };
-      httpClientSpy.get.and.returnValue(of(mockResponse)); // Mock HTTP response
-    
-      newsService.getImageUrl(fileId).subscribe((data) => {
-        expect(data).toEqual(mockResponse);
-      });
-    
-      // Ensure the spy is called with the correct URL
-      expect(httpClientSpy.get).toHaveBeenCalledWith('https://chhcpportalode4.prod.acquia-sites.com/jsonapi/file/mime_attachment_binary/123'); // Adjust with your actual base URL
+  it('should fetch a new token if not cached or expired', () => {
+
+    service['TOKEN_CACHE'] = { accessToken: null, expiresAt: null };
+
+
+    const mockToken = '123';
+    const mockTokenResponse = { access_token: mockToken, expires_in: 3600 };
+
+    service.fetchToken().subscribe((token) => {
+      expect(token).toBe(mockToken); 
     });
-    
+    const expectedUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
+    const req = httpMock.expectOne(expectedUrl);
+
+    expect(req.request.method).toBe('POST');
+
+    req.flush(mockTokenResponse);
+    httpMock.verify();
   });
+
+
+  it('should get news after fetching the token', () => {
+    spyOn(service, 'fetchToken').and.returnValue(of(mockToken));
+
+    service.getNews().subscribe((news) => {
+      expect(news).toEqual(mockNewsData);
+    });
+
+    const expectedUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/node/news`;
+    const req = httpMock.expectOne(expectedUrl);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockNewsData);
+  });
+
+  it('should handle error when fetching news fails', () => {
+    service.getNews().subscribe({
+      next: () => fail('should have failed with an error'),
+      error: (error: HttpErrorResponse) => {
+        expect(error.status).toBe(500);
+        expect(error.error.message).toBe('Internal Server Error');  
+      }
+    });
+
+    const expectedUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
+    httpMock.expectOne(expectedUrl);
+
+  });
+
+
+  it('should fetch image URL after fetching the token', () => {
+    const mockImageId = '123';
+    spyOn(service, 'fetchToken').and.returnValue(of('fake-token'));
+    service.getImageUrl(mockImageId).subscribe((image) => {
+      expect(image).toEqual(mockImageData);  
+    });
+
+    const expectedUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary/${mockImageId}`;
+
+    const req = httpMock.expectOne(expectedUrl);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockImageData);
+    httpMock.verify();
+  });
+
+
+  it('should handle error when fetching image URL fails', () => {
+    const mockImageId = '123';
+    const mockError = { message: 'Image not found' };
+    spyOn(service, 'fetchToken').and.returnValue(of('fake-token'));
+
+    service.getImageUrl(mockImageId).subscribe(
+      () => fail('should have failed with an error'),
+      (error) => {
+        expect(error.status).toBe(404);
+        expect(error.error.message).toBe('Image not found');
+      }
+    );
+    const expectedUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary/${mockImageId}`;
+    const req = httpMock.expectOne(expectedUrl);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockError, { status: 404, statusText: 'Not Found' });
+    httpMock.verify();
+  });
+
+
 });
