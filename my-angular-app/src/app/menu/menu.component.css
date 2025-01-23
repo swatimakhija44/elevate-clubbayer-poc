@@ -1,0 +1,23 @@
+.nav-bar-header {
+    .animate-dropdown {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        transform: translateY(-10px);
+    }
+
+    .navbar-collapse {
+        margin-left: 30px;
+
+        .navbar-nav {
+
+            .nav-link {
+                color: #0F384E;
+                margin-right: 20px;
+                line-height: 18px;
+                font-size: 19px;
+            }
+        }
+    }
+
+}

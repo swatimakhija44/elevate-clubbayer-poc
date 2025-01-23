@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-light header">
+    <div class="container-fluid header-container">
+        <div class="d-flex justify-content-center align-items-center">
+            <div>
+                <img src="./../../assets/BayerLogo.png" class="logo" alt="logo" />
+            </div>
+            <div class="flex-grow-1">
+                <p class="portal-name">{{ portalName }}</p>
+            </div>
+        </div>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item menu-selector">
+                    <app-menu></app-menu>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

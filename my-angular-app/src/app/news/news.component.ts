@@ -23,12 +23,12 @@ export class NewsComponent implements OnInit {
     this.fetchArticles();
   }
  
- 
   fetchArticles(): void {
     this.newsService.fetchToken().subscribe((tokenData) => {
         if (tokenData && tokenData.access_token) {
           this.newsService.getNews(tokenData.access_token).subscribe((newsData) => {
               this.articles = newsData?.data || [];
+              // console.log('news', this.articles)
               this.loading = false;
               this.fetchImages(this.articles, tokenData.access_token);
             },
