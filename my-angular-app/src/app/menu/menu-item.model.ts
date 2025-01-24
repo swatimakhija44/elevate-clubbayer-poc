@@ -1,7 +1,11 @@
 export interface MenuItem{
-    title:string;
-    key:string;
-    enabled:boolean;
-    below?:MenuItem[];
-    absolute?: string;
+ id: number;
+  name: string;
+  title?: string;  
+  key?: string;    
+  enabled: boolean;
+  below?: MenuItem[];
+  absolute?: string;
+  enabledSubMenuItems?: MenuItem[];
+  menu?: MenuItem[];
 }

@@ -17,7 +17,7 @@ export class MenuService {
   private grant_type = environment.GRANT_TYPE;
   private scope = environment.SCOPE;
   private tokenUrl = `${this.baseUrl}/oauth/token`;
-  private menuUrl = `${this.baseUrl}/jsonapi/menu_link_content/bayph-radlgy-main-menu`;
+  private menuUrl = `${this.baseUrl}/api/menu_items/bayph-radlgy-main-menu`;
 
   constructor(private http: HttpClient) {}
 
@@ -36,7 +36,6 @@ export class MenuService {
       'Content-Type': 'application/x-www-form-urlencoded',  
     });
 
-    // // Log the request details
     // console.log('Making POST request to:', this.tokenUrl);
     // console.log('Request body:', body.toString());
     // console.log('Request headers:', headers);
