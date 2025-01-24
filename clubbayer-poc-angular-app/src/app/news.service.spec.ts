@@ -124,6 +124,4 @@ describe('NewsService', () => {
     req.flush(mockError, { status: 404, statusText: 'Not Found' });
     httpMock.verify();
   });
-
-
 });
