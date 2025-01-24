@@ -1,66 +1,75 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsService } from '../news.service';
- 
+
 @Component({
   selector: 'app-news',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './news.component.html',
-  styleUrl: './news.component.css',
+  styleUrls: ['./news.component.css'],
 })
 export class NewsComponent implements OnInit {
   articles: any[] = [];
-  source: any[] =[];
+  source: any[] = [];
   loading = true;
   images: string[] = [];
   error: string | null = null;
-  
- 
+
   constructor(private newsService: NewsService) {}
- 
+
   ngOnInit() {
     this.fetchArticles();
   }
- 
+
+  // Updated fetchArticles method using the new fetchCachedToken
   fetchArticles(): void {
-    this.newsService.fetchToken().subscribe((tokenData) => {
-        if (tokenData && tokenData.access_token) {
-          this.newsService.getNews(tokenData.access_token).subscribe((newsData) => {
+    this.newsService.fetchToken().subscribe(
+      (token) => {
+        if (token) {
+          // Now we get the news using the cached or new token
+          this.newsService.getNews().subscribe(
+            (newsData) => {
               this.articles = newsData?.data || [];
-              // console.log('news', this.articles)
               this.loading = false;
-              this.fetchImages(this.articles, tokenData.access_token);
+              this.fetchImages(this.articles, token);
             },
             (error) => {
               console.error('Error fetching news:', error);
               this.loading = false;
+              this.error = 'Failed to load news.';
             }
           );
         } else {
           this.loading = false;
+          this.error = 'Failed to retrieve a valid token.';
         }
       },
       (error) => {
         console.error('Error fetching token:', error);
         this.loading = false;
+        this.error = 'Failed to retrieve a valid token.';
       }
     );
   }
- 
-  
+
+  // Fetch images for the articles
   fetchImages(newsItems: any[], token: string): void {
-    const imageIds = this.articles.map((item) => item.relationships?.field_news_image?.data?.id);
+    const imageIds = newsItems.map((item) => item.relationships?.field_news_image?.data?.id);
     this.images = [];
+
     imageIds.forEach((id, index) => {
-      this.newsService.getImageUrl(id,token).subscribe(
-        (response) => {
-          this.images[index] = response?.data?.attributes?.uri?.url || '';
-        },
-        (error) => {
-          console.error('Failed to load image', error);
-        }
-      );
+      if (id) {
+        this.newsService.getImageUrl(id).subscribe(
+          (response) => {
+            this.images[index] = response?.data?.attributes?.uri?.url || '';
+          },
+          (error) => {
+            console.error('Failed to load image', error);
+            this.images[index] = ''; // Handle failed image loading gracefully
+          }
+        );
+      }
     });
   }
 }
