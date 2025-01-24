@@ -1,0 +1,38 @@
+nav.header {
+    background-color: #E3EDF0;
+    height: 75px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    width: 100%;
+
+    .header-container {
+        margin-left: 35px;
+        margin-right: 47px;
+
+        main {
+            overflow-y: auto;
+            height: calc(100vh - 75px);
+        }
+
+        .logo {
+            margin: 11px 16px 11px 31px;
+            width: 55px;
+            height: 55px;
+        }
+
+        .portal-name {
+            font-weight: bold;
+            font-size: 19px;
+            line-height: 19px;
+            color: #0f384e;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-selector {
+            margin-left: 10px;
+        }
+
+    }
+}
