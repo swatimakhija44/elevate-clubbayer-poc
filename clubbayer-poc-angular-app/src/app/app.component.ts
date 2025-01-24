@@ -10,5 +10,5 @@ import { NewsComponent } from './news/news.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'my-angular-app';
+ title = 'my-angular-app';
 }
