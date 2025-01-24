@@ -9,5 +9,4 @@ export const routes: Routes = [
     // loadComponent: () =>
     //   import('./news/news.component').then((m) => m.NewsComponent),
   },
-
 ];
