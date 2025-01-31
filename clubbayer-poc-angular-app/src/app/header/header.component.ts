@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MenuComponent } from '../menu/menu.component';
-import { NewsComponent } from '../news/news.component';
 
 @Component({
   selector: 'app-header',

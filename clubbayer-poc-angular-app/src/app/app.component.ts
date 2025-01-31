@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NewsComponent } from './news/news.component';
-import { MenuComponent } from './menu/menu.component';
-import {HeaderComponent} from './header/header.component'
+import { HeaderComponent } from './header/header.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,NewsComponent,HeaderComponent],
+  imports: [RouterOutlet, NewsComponent, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
