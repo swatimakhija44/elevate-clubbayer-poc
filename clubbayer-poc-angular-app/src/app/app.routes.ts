@@ -1,15 +1,25 @@
 import { Routes } from '@angular/router';
 import { NewsComponent } from './news/news.component';
-import { HeaderComponent } from './header/header.component';
+import { MenuComponent } from './menu/menu.component';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'menu',
+    component:MenuComponent
+  },
+  {
     path: 'news',
     component: NewsComponent
   },
   {
-    path: '',
-    component: HeaderComponent
-  }
+    path: 'test',
+    component: TestComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'news',
+    pathMatch: 'full',
+  },
+  
 ];

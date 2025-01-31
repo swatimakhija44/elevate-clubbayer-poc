@@ -7,10 +7,10 @@ import {HeaderComponent} from './header/header.component'
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,NewsComponent,MenuComponent,HeaderComponent],
+  imports: [RouterOutlet,NewsComponent,HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'my-angular-app';
+  title = 'clubbayer-poc-angular-app';
 }

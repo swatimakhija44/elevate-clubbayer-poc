@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsService } from '../news.service';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MenuComponent],
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css'],
 })
