@@ -1,0 +1,37 @@
+.firstSection {
+    background-color: #40baff;
+    padding: 4em 8em;
+    margin: 0%;
+    line-height: 3em;
+}
+
+.title {
+    font-size: 19px;
+}
+
+.contactButton {
+    background-color: #40baff;
+    border-color: rgb(61, 61, 61);
+    border-width: 1px;
+    border-radius: 7px;
+    color: #081821;
+    font-weight: bold;
+    padding: 0px 27px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.imgSection {
+    justify-items: center;
+}
+
+.linkSection {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
+
+.secondRow{
+ padding: 2em 12em;
+}
