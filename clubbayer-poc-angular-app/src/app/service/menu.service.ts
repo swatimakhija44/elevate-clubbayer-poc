@@ -66,7 +66,7 @@ export class MenuService {
   getMenu(token: string): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
-        const headers = new HttpHeaders().set('Authorization', `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjczYWFkNzcxZjQ1MDk0MzVjZDBkZGJiNzA4NzczMjM0MWVmNThlNWNkNjAzNDM2N2JkYTE4NzBhNjczNWQzM2Y4ODAwY2U2OWQ5MDNlNzU3In0.eyJhdWQiOiJnZ3ZTb3JlMUFRTXZvYkpTa21BbWVOaUlKbmNZM0hnZjlDcGFtd3BrQkZNIiwianRpIjoiNzNhYWQ3NzFmNDUwOTQzNWNkMGRkYmI3MDg3NzMyMzQxZWY1OGU1Y2Q2MDM0MzY3YmRhMTg3MGE2NzM1ZDMzZjg4MDBjZTY5ZDkwM2U3NTciLCJpYXQiOjE3MzgzMDM4MTcsIm5iZiI6MTczODMwMzgxNywiZXhwIjoxNzM4MzA3NDE3LjU3NzQ3MjksInN1YiI6IjE1MTg2Iiwic2NvcGUiOlsic3RhZmYiLCJhdXRoZW50aWNhdGVkIl19.Qq8zu4c1GFwOkLgR-thhIADHlptOxa5ncBaf8NAUuY8pILZYfY3ZXHwEe9xhEYSi4CdBA7e047WSmCuAM52sNHcWa9lV_Pb3Tw6qxZQm0wGSPA0--TJpKP03f4YLVhyPXW5vOZrj1oNWQZaGJO6SlPnsW9E9cQ2PoEkhu9IhVUzkTcuq96JycSBDdxRoOurMNdhgkizJX59B2I-SbmSunZhCsbMG2HONDnhT9xeMjtym5cTcdVB7OGXLvKYkMsL6OvOtGLa4688sjutmkG6C9Yhtsj2NmBLevRdvTDyURAYksc40wc_RIIQQTA_Ba7tx3qjuGKv6Qz25RP3wWERcabRl78FrnVgGfSttq1y5NescRg9s8guOTKaSlDQJbaWxHyeZPI0rE3NUljs0bl7YcSB6WJesP_n7xBQhrsO4ABPhqE69p5Z41yS5seFEO9OYnsO2jV9wncV5vJCVqfpOuTF17dCOfSid3IEEdzs9yWQSzHJSkKQ_krZthjhnuJtemP65q_UT6y0cIvmXdGhC0Nf1AYBRLKmxZBPNwAAL98S7Vp4jT9FvhhEsF1Fi404gCS4ZDG_u-_X0-Go_esUY-XR_1qfo7N_7XXzveCoNsaYvflenXGXwB7c50JsV3R2hgdkhvFDW8krO65NP04THe93y48r_hD4IeHR_Xuem7MA`);
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.http.get(`${this.menuUrl}`, { headers })
       })
     )
