@@ -59,7 +59,7 @@ export class NewsService {
   getNews(): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
         return this.http.get(this.newsUrl, { headers });
       })
     );
@@ -69,7 +69,7 @@ export class NewsService {
   getImageUrl(id: string): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
         return this.http.get(`${this.fileUrl}/${id}`, { headers });
       })
     );
