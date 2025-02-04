@@ -12,7 +12,7 @@ sharedMappings.register(
 
 module.exports = {
   output: {
-    uniqueName: "elevatesample",
+    uniqueName: "elevate-local-shell",
     publicPath: "auto",
    
   },
