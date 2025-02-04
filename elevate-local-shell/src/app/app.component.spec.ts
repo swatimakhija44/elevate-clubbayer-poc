@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'elevatesample' title`, () => {
+  it(`should have the 'elevate-local-shell' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('elevatesample');
+    expect(app.title).toEqual('elevate-local-shell');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, elevatesample');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, elevate-local-shell');
   });
 });
