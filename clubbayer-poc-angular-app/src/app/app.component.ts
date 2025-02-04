@@ -13,5 +13,5 @@ import { TrainingComponent } from './training/training.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'my-angular-app';
+  title = 'clubbayer-poc-angular-app';
 }

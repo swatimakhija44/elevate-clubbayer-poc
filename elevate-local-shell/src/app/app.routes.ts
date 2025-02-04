@@ -9,7 +9,7 @@ export const routes: Routes = [
     loadChildren: () =>
       loadRemoteModule({
         type: 'manifest',
-          remoteName: 'my-angular-app',
+        remoteName: 'clubbayer-poc-angular-app',
         exposedModule: './routes',
       }).then((r:any) => {
         return r.routes; 
@@ -17,7 +17,7 @@ export const routes: Routes = [
       .catch((error:any) => {
         console.error("Error loading remote module:", error);
       }),
-  } ,
+  }  ,
     {
       path: 'iframe',
       loadComponent: () => import('./iframe/iframe.component').then(m => m.IframeComponent)

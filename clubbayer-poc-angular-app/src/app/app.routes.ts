@@ -22,4 +22,8 @@ export const routes: Routes = [
     redirectTo: 'news',
     pathMatch: 'full',
   }
+  // {
+  //   path: '',
+  //   component: HeaderComponent
+  // }
 ];
