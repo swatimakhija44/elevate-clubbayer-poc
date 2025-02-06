@@ -1,22 +1,24 @@
-<app-menu></app-menu>
-
 <!-- news.component.html -->
 <div *ngIf="loading">Loading...</div>
 <div *ngIf="error">{{ error }}</div>
 
 <div *ngIf="!loading && !error">
   <h1 class=" my-5 mx-4 card-header">News Article</h1>
-  <ul   class="d-flex justify-content-between" >
-    <li class="card text-bg-light card-body  border-secondary mb-3" style="max-width: 20rem; list-style: none" *ngFor="let article of articles; let index = index" >
-      <h1  class="card-title">{{ article.attributes.title }}</h1>
+  <ul class="d-flex justify-content-between">
+    <li class="card text-bg-light card-body  border-secondary mb-3" style="max-width: 20rem; list-style: none"
+      *ngFor="let article of articles; let index = index">
+      <h1 class="card-title">{{ article.attributes.title }}</h1>
 
       <div *ngIf="images[index]" style="margin: 10px">
-        <img class="card-img-top" [src]="'https://chhcpportalode4.prod.acquia-sites.com' + images[index]" alt="Image" style="width: 200px; height: auto" />
+        <img class="card-img-top" [src]="'https://chhcpportalode4.prod.acquia-sites.com' + images[index]" alt="Image"
+          style="width: 200px; height: auto" />
       </div>
-      
-      <p  class="card-text text-gray-700" [innerHTML]="article.attributes.body?.value">{{ article.attributes.body?.value }}</p>
+
+      <p class="card-text text-gray-700" [innerHTML]="article.attributes.body?.value">{{ article.attributes.body?.value
+        }}</p>
       <p class="card-text text-gray-700 mb-5">
-        Start: {{ article.attributes.field_news_campaign_period?.value }} end: {{ article.attributes.field_news_campaign_period?.end_value }}
+        Start: {{ article.attributes.field_news_campaign_period?.value }} end: {{
+        article.attributes.field_news_campaign_period?.end_value }}
       </p>
 
       <div class="flex gap-6">

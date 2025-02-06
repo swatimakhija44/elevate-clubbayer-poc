@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsService } from '../news.service';
-import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [CommonModule,MenuComponent],
+  imports: [CommonModule],
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css'],
 })
@@ -17,7 +16,7 @@ export class NewsComponent implements OnInit {
   images: string[] = [];
   error: string | null = null;
 
-  constructor(private newsService: NewsService) {}
+  constructor(private newsService: NewsService) { }
 
   ngOnInit() {
     this.fetchArticles();
