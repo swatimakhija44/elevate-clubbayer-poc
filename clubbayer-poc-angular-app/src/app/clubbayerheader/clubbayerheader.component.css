@@ -1,0 +1,15 @@
+.navBar{
+    background-color: #673ab7;
+    padding: 1em;
+}
+.textData{
+    color: #ffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+.textDataTitle{
+    text-decoration: none;
+    color: #ffff;
+    font-weight: bold;
+    font-size: 22px;
+}
