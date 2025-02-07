@@ -13,10 +13,7 @@ export class ClubbayerfooterComponent implements OnInit {
 
   footerMenuItem: any[] = [];
   footerMainenuItem: any[] = [];
-  footerSubmenuItem: any[] = [];
-  source: any[] = [];
   loading = true;
-  images: string[] = [];
   error: string | null = null;
 
   constructor(private footerService: FooterService) { }
@@ -29,11 +26,8 @@ export class ClubbayerfooterComponent implements OnInit {
     this.footerService.fetchToken().subscribe(
       (token) => {
         if (token) {
-          // console.log("Token Received:", token);
-
           this.footerService.getFooterOne().subscribe(
             (footerOneData: any[]) => {
-              console.log("Raw API Response:", footerOneData);
               this.footerMenuItem = Array.isArray(footerOneData)
                 ? footerOneData.map((item: { title: string; below?: { title: string }[] }) => ({
                   title: item.title,
@@ -44,7 +38,6 @@ export class ClubbayerfooterComponent implements OnInit {
                 : [];
 
               this.loading = false;
-              console.log("Processed Menu:", JSON.stringify(this.footerMenuItem, null, 2));
             },
             (error) => {
               console.error("Error fetching footer menu:", error);
@@ -54,7 +47,6 @@ export class ClubbayerfooterComponent implements OnInit {
           );
           this.footerService.getFooterTwo().subscribe(
             (footerTwoData: any[]) => {
-              // console.log("Raw API Response:", footerTwoData);
               this.footerMainenuItem = Array.isArray(footerTwoData)
                 ? footerTwoData.map((item: { title: string }) => ({
                   mainTitle: item.title
@@ -62,7 +54,6 @@ export class ClubbayerfooterComponent implements OnInit {
                 : [];
 
               this.loading = false;
-              // console.log("Processed Menu:", JSON.stringify(this.footerMenuItem, null, 2));
             },
             (error) => {
               console.error("Error fetching footer menu:", error);
@@ -70,9 +61,6 @@ export class ClubbayerfooterComponent implements OnInit {
               this.error = error?.message ?? 'Failed to load footer data.';
             }
           );
-
-
-
         } else {
           this.loading = false;
           this.error = 'Failed to retrieve a valid token.';
