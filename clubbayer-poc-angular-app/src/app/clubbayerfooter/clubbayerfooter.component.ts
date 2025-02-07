@@ -7,11 +7,12 @@ import { FooterService } from '../service/footer.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './clubbayerfooter.component.html',
-  styleUrl: './clubbayerfooter.component.css'
+  styleUrls: ['./clubbayerfooter.component.css']
 })
 export class ClubbayerfooterComponent implements OnInit {
 
   footerMenuItem: any[] = [];
+  footerMainenuItem: any[] = [];
   footerSubmenuItem: any[] = [];
   source: any[] = [];
   loading = true;
@@ -24,44 +25,64 @@ export class ClubbayerfooterComponent implements OnInit {
     this.fetchFooterMenu();
   }
 
-  // Updated fetchArticles method using the new fetchCachedToken
   fetchFooterMenu(): void {
-
     this.footerService.fetchToken().subscribe(
       (token) => {
         if (token) {
-          console.log("aaaaaaaaaaaaaaaa1");
+          // console.log("Token Received:", token);
 
-          // Now we get the news using the cached or new token
           this.footerService.getFooterOne().subscribe(
             (footerOneData: any[]) => {
-              this.footerMenuItem = footerOneData?.map((item: { title: string; below?: { title: string }[] }) => ({
-                title: item.title,
-                belowTitles: item.below?.map(subItem => subItem.title) ?? []
-              })) ?? [];
+              console.log("Raw API Response:", footerOneData);
+              this.footerMenuItem = Array.isArray(footerOneData)
+                ? footerOneData.map((item: { title: string; below?: { title: string }[] }) => ({
+                  title: item.title,
+                  belowTitles: Array.isArray(item.below)
+                    ? item.below.map(subItem => subItem.title)
+                    : []
+                }))
+                : [];
+
               this.loading = false;
-              // this.fetchImages(this.articles, token);
-              console.log("aaaaaaaaaaaaaaaa", footerOneData);
-              console.log("aaaaaaaaaaaaaaaa1111111", footerOneData[0].title);
-              console.log("aaaaaaaaabbbbb", this.footerMenuItem);
+              console.log("Processed Menu:", JSON.stringify(this.footerMenuItem, null, 2));
             },
             (error) => {
-              console.error('Error fetching news:', error);
+              console.error("Error fetching footer menu:", error);
               this.loading = false;
-              this.error = 'Failed to load news.';
+              this.error = error?.message ?? 'Failed to load footer data.';
             }
           );
+          this.footerService.getFooterTwo().subscribe(
+            (footerTwoData: any[]) => {
+              // console.log("Raw API Response:", footerTwoData);
+              this.footerMainenuItem = Array.isArray(footerTwoData)
+                ? footerTwoData.map((item: { title: string }) => ({
+                  mainTitle: item.title
+                }))
+                : [];
+
+              this.loading = false;
+              // console.log("Processed Menu:", JSON.stringify(this.footerMenuItem, null, 2));
+            },
+            (error) => {
+              console.error("Error fetching footer menu:", error);
+              this.loading = false;
+              this.error = error?.message ?? 'Failed to load footer data.';
+            }
+          );
+
+
+
         } else {
           this.loading = false;
           this.error = 'Failed to retrieve a valid token.';
         }
       },
       (error) => {
-        console.error('Error fetching token:', error);
+        console.error("Error fetching token:", error);
         this.loading = false;
         this.error = 'Failed to retrieve a valid token.';
       }
     );
   }
 }
-

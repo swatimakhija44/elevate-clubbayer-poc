@@ -5,45 +5,29 @@
     <div class="color3"></div>
   </div>
   <section class="firstSection">
-    <h1>
-      <span><a href="#" class="mainTitle">Conditions</a></span>
-      <span class="slashSymbol">/</span>
-      <span><a href="#" class="mainTitle">Imprint</a></span>
-      <span class="slashSymbol">/</span>
-      <span><a href="#" class="mainTitle">Privacy Statement</a></span>
+    <h1 *ngIf="footerMainenuItem.length > 0">
+      <span *ngFor="let item of footerMainenuItem; let last = last">
+        <a href="#" class="mainTitle">{{ item.mainTitle }}</a>
+        <span *ngIf="!last" class="slashSymbol">/</span>
+      </span>
     </h1>
     <hr class="horizontalLine">
-    <div class="row">
-      <div class="col-lg-3">
-        <!-- <h2 class="title">{{footerMenuItem[0]}}</h2> -->
-        <p class="subTitleP"><a href="#" class="subTitle">Contact with us</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">FAQs</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">How to sign up</a></p>
-      </div>
-      <div class="col-lg-3">
-        <!-- <h2 class="title">{{footerMenuItem[1]}}</h2> -->
-        <p class="subTitleP"><a href="#" class="subTitle">Contact with us</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">FAQs</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">How to sign up</a></p>
-      </div>
-      <div class="col-lg-3">
-        <!-- <h2 class="title">{{footerMenuItem[2]}}</h2> -->
-        <p class="subTitleP"><a href="#" class="subTitle">Contact with us</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">FAQs</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">How to sign up</a></p>
-      </div>
-      <div class="col-lg-3">
-        <!-- <h2 class="title">{{footerMenuItem[3]}}</h2> -->
-        <p class="subTitleP"><a href="#" class="subTitle">Contact with us</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">FAQs</a></p>
-        <p class="subTitleP"><a href="#" class="subTitle">How to sign up</a></p>
+    <div class="row" *ngIf="!loading && !error">
+      <div class="col-lg-3" *ngFor="let menuItem of footerMenuItem">
+        <h2 class="title">{{ menuItem.title }}</h2>
+        <p class="subTitleP" *ngFor="let subTitle of menuItem.belowTitles">
+          <a href="#" class="subTitle">{{ subTitle }}</a>
+        </p>
       </div>
     </div>
+
+    <div *ngIf="loading">Loading footer menu...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
   </section>
   <section class="secondSection">
     <p class="text"> The information on this website is aimed exclusively at health professionals who dispense medicines
-      and
-      therefore requires specialist training for correct interpretation. The information on the products offered on this
+      and therefore requires specialist training for correct interpretation. The information on the products offered on
+      this
       website is only intended for health professionals resident in the Middle East. All training, challenges and other
       content related to medicines, whether or not they are prescribed, will not entail the granting of any type of
       discount, prize, gift or benefit to users.</p>
