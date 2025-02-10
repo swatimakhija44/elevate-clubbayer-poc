@@ -48,13 +48,14 @@ export class MenuService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
     });
-
+    console.log("headers", headers)
     // Make the HTTP POST request to get the token
     return this.http.post<any>(this.tokenUrl, body.toString(), { headers }).pipe(
       switchMap((tokenData) => {
         // Store the new token and its expiration time in cache
         this.TOKEN_CACHE.accessToken = tokenData.access_token;
         this.TOKEN_CACHE.expiresAt = Date.now() + tokenData.expires_in * 1000;
+        console.log("token", this.TOKEN_CACHE.accessToken)
         return of(this.TOKEN_CACHE.accessToken); // Return the new token wrapped in an observable
       }),
       catchError((error) => {
@@ -66,6 +67,7 @@ export class MenuService {
   getMenu(token: string): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
+        console.log("token", token)
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
         return this.http.get(`${this.menuUrl}`, { headers })
       })
