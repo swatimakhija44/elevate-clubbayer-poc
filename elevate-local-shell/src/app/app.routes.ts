@@ -4,38 +4,22 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 
 
 export const routes: Routes = [
-    {
-      path: 'news',
-  
-      loadChildren: () =>
-        loadRemoteModule({
-          type: 'manifest',
-          remoteName: 'clubbayer-poc-angular-app',
-          exposedModule: './routes',
-        }).then((r:any) => {
-          return r.routes; 
-        })
-        .catch((error:any) => {
+  {
+    path: "club-bayer",
+    loadChildren: () =>
+      loadRemoteModule({
+        type: 'manifest',
+        remoteName: 'clubbayer-poc-angular-app',
+        exposedModule: './routes',
+      }).then((r: any) => {
+        return r.routes;
+      })
+        .catch((error: any) => {
           console.error("Error loading remote module:", error);
         }),
-
-    },
-    {
-      path: 'iframe',
-      loadComponent: () => import('./iframe/iframe.component').then(m => m.IframeComponent)
-    },
-    {
-      path:"",
-      loadChildren: () =>
-        loadRemoteModule({
-          type: 'manifest',
-          remoteName: 'clubbayer-poc-angular-app',
-          exposedModule: './routes',
-        }).then((r:any) => {
-          return r.routes; 
-        })
-        .catch((error:any) => {
-          console.error("Error loading remote module:", error);
-        }),
-    }  
+  },
+  {
+    path: 'iframe',
+    loadComponent: () => import('./iframe/iframe.component').then(m => m.IframeComponent)
+  }
 ];
