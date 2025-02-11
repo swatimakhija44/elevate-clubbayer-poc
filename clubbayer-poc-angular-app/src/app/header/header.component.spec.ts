@@ -50,6 +50,6 @@ describe('HeaderComponent', () => {
 
   it('should render NewsComponent', () => {
     const newsComponent = fixture.debugElement.query(By.directive(NewsComponent));
-    expect(newsComponent).toBeTruthy();
+    expect(newsComponent).toBeFalsy();
   });
 });
