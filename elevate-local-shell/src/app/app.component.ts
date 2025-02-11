@@ -10,5 +10,5 @@ import { CbMenuComponent } from './cb-menu/cb-menu.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'elevatesample';
+  title = 'elevate-local-shell';
 }
