@@ -5,21 +5,21 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 
 export const routes: Routes = [
   {
-    path:"club-bayer",
+    path: "club-bayer",
     loadChildren: () =>
       loadRemoteModule({
         type: 'manifest',
         remoteName: 'clubbayer-poc-angular-app',
         exposedModule: './routes',
-      }).then((r:any) => {
-        return r.routes; 
+      }).then((r: any) => {
+        return r.routes;
       })
-      .catch((error:any) => {
-        console.error("Error loading remote module:", error);
-      }),
-  }  ,
-    {
-      path: 'iframe',
-      loadComponent: () => import('./iframe/iframe.component').then(m => m.IframeComponent)
-    }
+        .catch((error: any) => {
+          console.error("Error loading remote module:", error);
+        }),
+  },
+  {
+    path: 'iframe',
+    loadComponent: () => import('./iframe/iframe.component').then(m => m.IframeComponent)
+  }
 ];

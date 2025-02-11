@@ -17,7 +17,7 @@ export class NewsService {
     expiresAt: null,
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Fetch the cached token or request a new one if expired
   public fetchToken(): Observable<any> {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { RouterModule } from '@angular/router';
@@ -13,41 +13,47 @@ import { MenuService } from '../service/menu.service';
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit {
-  @Input() menuItems: MenuItem[] = [];
   flatMenuItems: MenuItem[] = [];
   menu: MenuItem[] = [];
   loading = true;
+  error: string | null = null;
 
   constructor(private menuService: MenuService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getMenuData();
   }
 
+  // fetching menu items using the token
   getMenuData(): void {
     this.menuService.fetchToken().subscribe((tokenData) => {
-      if (tokenData && tokenData.access_token) {
-        this.menuService.getMenu(tokenData.access_token).subscribe((menuData) => {
+      if (tokenData) {
+        this.menuService.getMenu(tokenData).subscribe((menuData) => {
           this.menu = menuData || [];
-          this.processMenuItems();
+
+          this.processMenuItems(); //Calling the filtered menu items
           this.loading = false;
         },
           (error) => {
-            console.error('Error fetching news:', error);
+            console.error('Error fetching menu:', error);
             this.loading = false;
+            this.error = 'Failed to load menu.';
           }
         );
       } else {
         this.loading = false;
+        this.error = 'Failed to retrieve a valid token.';
       }
     },
       (error) => {
         console.error('Error fetching token:', error);
         this.loading = false;
+        this.error = 'Failed to retrieve a valid token.';
       }
     );
   }
 
+  //Filtering the enbaled menu items 
   processMenuItems(): void {
     this.menu.filter(item => item.enabled === true).map(item => {
       const { below, ...rest } = item;
@@ -58,11 +64,7 @@ export class MenuComponent implements OnInit {
           below: filteredItem
         };
       }
-      this.flatMenuItems.push(item);
+      this.flatMenuItems?.push(item);
     });
   }
 }
-
-
-
-
