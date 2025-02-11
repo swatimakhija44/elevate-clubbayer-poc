@@ -2,10 +2,11 @@ const { shareAll, withModuleFederationPlugin } = require('@angular-architects/mo
 
 module.exports = withModuleFederationPlugin({
 
-  name: 'my-angular-app',
+  name: 'clubbayer-poc-angular-app',
   filename: "remoteEntry.js",
   exposes: {
     './routes': './src/app/app.routes.ts',
+    './footer': './src/app/clubbayerfooter/clubbayerfooter.component.ts'
   },
 
   shared: {

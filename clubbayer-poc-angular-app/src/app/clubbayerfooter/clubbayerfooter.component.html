@@ -25,12 +25,16 @@
     <div *ngIf="error" class="error">{{ error }}</div>
   </section>
   <section class="secondSection">
-    <p class="text"> The information on this website is aimed exclusively at health professionals who dispense medicines
+    <div *ngFor="let item of footerBlockItem">
+      <p class="text">{{ item.blockContent }}</p>
+    </div>
+    <!-- <p>{blockContent}</p> -->
+    <!-- <p class="text"> The information on this website is aimed exclusively at health professionals who dispense medicines
       and therefore requires specialist training for correct interpretation. The information on the products offered on
       this
       website is only intended for health professionals resident in the Middle East. All training, challenges and other
       content related to medicines, whether or not they are prescribed, will not entail the granting of any type of
       discount, prize, gift or benefit to users.</p>
-    <p class="copyRight">Copyright 2024, Copyright © Bayer Middle East</p>
+    <p class="copyRight">Copyright 2024, Copyright © Bayer Middle East</p> -->
   </section>
 </footer>

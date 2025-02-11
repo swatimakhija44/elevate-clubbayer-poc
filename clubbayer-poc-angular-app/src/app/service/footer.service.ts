@@ -10,8 +10,9 @@ import { catchError, switchMap } from 'rxjs/operators';
 export class FooterService {
 
   private tokenUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
-  private footerUrlOne = `${environment.DRUPAL_BASE_URL}/api/menu_items/bayph-radlgy-footer-menu`;
-  private footerUrlTwo = `${environment.DRUPAL_BASE_URL}/api/menu_items/pre-menu`;
+  private footerMenuItemsUrl = `${environment.DRUPAL_BASE_URL}/api/menu_items/bayph-radlgy-footer-menu`;
+  private footerPreMenuUrl = `${environment.DRUPAL_BASE_URL}/api/menu_items/pre-menu`;
+  private footerBlockContentUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/block_content/basic/dc0e5cee-2bbc-40f6-ae36-bd55ba0f881b`;
 
   private TOKEN_CACHE: { accessToken: string | null, expiresAt: number | null } = {
     accessToken: null,
@@ -56,22 +57,30 @@ export class FooterService {
     );
   }
 
-  // Get footerOne using the access token
-  getFooterOne(): Observable<any> {
+  // Get footerMenuItemsUrl using the access token
+  getFooterMenuItems(): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.get(this.footerUrlOne, { headers });
+        return this.http.get(this.footerMenuItemsUrl, { headers });
       })
     );
   }
 
-  // Get footerTne using the access token
-  getFooterTwo(): Observable<any> {
+  // Get footerPreMenuUrl using the access token
+  getFooterPreMenu(): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.get(this.footerUrlTwo, { headers });
+        return this.http.get(this.footerPreMenuUrl, { headers });
+      })
+    );
+  }
+  getFooterBlockContent(): Observable<any> {
+    return this.fetchToken().pipe(
+      switchMap((token) => {
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        return this.http.get(this.footerBlockContentUrl, { headers });
       })
     );
   }

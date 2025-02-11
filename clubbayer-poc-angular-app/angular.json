@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "my-angular-app": {
+    "clubbayer-poc-angular-app": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
-            "outputPath": "dist/my-angular-app",
+            "outputPath": "dist/clubbayer-poc-angular-app",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -65,11 +65,11 @@
           "builder": "ngx-build-plus:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "my-angular-app:build:production",
+              "buildTarget": "clubbayer-poc-angular-app:build:production",
               "extraWebpackConfig": "webpack.prod.config.js"
             },
             "development": {
-              "buildTarget": "my-angular-app:build:development"
+              "buildTarget": "clubbayer-poc-angular-app:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -82,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "my-angular-app:build"
+            "buildTarget": "clubbayer-poc-angular-app:build"
           }
         },
         "test": {

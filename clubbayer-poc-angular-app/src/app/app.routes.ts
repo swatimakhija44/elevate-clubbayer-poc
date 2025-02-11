@@ -13,8 +13,4 @@ export const routes: Routes = [
     path: '',
     component: HeaderComponent
   },
-  {
-    path: '',
-    component: ClubbayerfooterComponent
-  }
 ];
