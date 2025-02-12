@@ -10,7 +10,7 @@ export const routes: Routes = [
       loadChildren: () =>
         loadRemoteModule({
           type: 'manifest',
-          remoteName: 'my-angular-app',
+          remoteName: 'clubbayer-poc-angular-app',
           exposedModule: './routes',
         }).then((r:any) => {
           return r.routes; 
@@ -29,7 +29,7 @@ export const routes: Routes = [
       loadChildren: () =>
         loadRemoteModule({
           type: 'manifest',
-          remoteName: 'my-angular-app',
+          remoteName: 'clubbayer-poc-angular-app',
           exposedModule: './routes',
         }).then((r:any) => {
           return r.routes; 
