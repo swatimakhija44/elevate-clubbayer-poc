@@ -17,36 +17,34 @@ export class TrainingDetailComponent {
   trainingId: number | undefined;
   error: string | null = null;
   images: any[] = [];
-  constructor(private trainingService: TrainingDetailService, private route: ActivatedRoute,) {}
+  constructor(private trainingService: TrainingDetailService, private route: ActivatedRoute,) { }
 
   ngOnInit() {
     const routeSnapshot = this.route.snapshot;
-  if (routeSnapshot && routeSnapshot.paramMap) {
-    this.trainingId = +routeSnapshot.paramMap.get('id')!;
-    this.fetchTrainingDetail(this.trainingId);
-  } 
-   
-    
+    if (routeSnapshot && routeSnapshot.paramMap) {
+      this.trainingId = +routeSnapshot.paramMap.get('id')!;
+      this.fetchTrainingDetail(this.trainingId);
+    }
   }
 
-  
+
   // Updated fetchArticles method using the new fetchCachedToken
-  fetchTrainingDetail(id:any): void {
+  fetchTrainingDetail(id: any): void {
     this.trainingService.fetchToken().subscribe(
       (token) => {
         if (token) {
           // Now we get the training using the cached or new token
           this.trainingService.getTraining(id).subscribe(
             (trainData) => {
-              
+
               this.trainingdetail = trainData || {};
-              console.log("data", this.trainingdetail)
+              // console.log("data", this.trainingdetail)
               this.loading = false;
               this.images = trainData.field_learning_path_media_image[0].target_uuid; // Assuming the API response structure
               console.log('Fetched Images:', this.images);
               this.trainingService.getImageUrl(this.images).subscribe(
-                (response:any) => {
-                  console.log('Image Details:', response); 
+                (response: any) => {
+                  console.log('Image Details:', response);
                   this.images = response?.data?.attributes?.uri?.url || '';
 
                 })
@@ -69,23 +67,5 @@ export class TrainingDetailComponent {
       }
     );
   }
-  // fetchImages(trainingItems: any[]): void {
-  //   const aa = trainingItems
-  //   this.images = [];
- 
-  //       this.trainingService.getImageUrl(trainingItems).subscribe(
-  //         (response:any) => {
-  //           this.images = response.field_learning_path_media_image; // Assuming the API response structure
-  //     console.log('Fetched Images:', this.images);
-  //           // this.images = response?.data?.attributes?.uri?.url || '';
-            
-  //         },
-  //         (error) => {
-  //           console.error('Failed to load image', error);
-         
-  //         }
-  //       );
-  //     }
 
- 
 }

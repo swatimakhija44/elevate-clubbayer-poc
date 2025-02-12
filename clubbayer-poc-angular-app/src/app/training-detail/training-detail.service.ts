@@ -9,8 +9,8 @@ import { catchError, Observable, of, switchMap } from 'rxjs';
 })
 export class TrainingDetailService {
 private tokenUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
-  private trainUrl = `${environment.DRUPAL_BASE_URL}/group`;
-  private fileUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/media/image`;
+  public trainUrl = `${environment.DRUPAL_BASE_URL}/group`;
+  public fileUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/media/image`;
 
   private TOKEN_CACHE: { accessToken: string | null, expiresAt: number | null } = {
     accessToken: null,
