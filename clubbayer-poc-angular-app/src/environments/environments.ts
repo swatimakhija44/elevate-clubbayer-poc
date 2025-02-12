@@ -7,3 +7,4 @@ export const environment = {
     SCOPE:'staff',
     DRUPAL_BASE_URL:'https://chains.club.bayer.ae'
 };
+  

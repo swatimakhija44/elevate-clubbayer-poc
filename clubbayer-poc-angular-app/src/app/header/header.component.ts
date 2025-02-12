@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { MenuComponent } from '../menu/menu.component';
-import { NewsComponent } from '../news/news.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MenuComponent,NewsComponent],
+  imports: [MenuComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

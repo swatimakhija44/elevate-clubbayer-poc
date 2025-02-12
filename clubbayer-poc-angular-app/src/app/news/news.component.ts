@@ -16,7 +16,7 @@ export class NewsComponent implements OnInit {
   images: string[] = [];
   error: string | null = null;
 
-  constructor(private newsService: NewsService) {}
+  constructor(private newsService: NewsService) { }
 
   ngOnInit() {
     this.fetchArticles();

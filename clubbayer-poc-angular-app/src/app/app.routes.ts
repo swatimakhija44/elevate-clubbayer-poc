@@ -36,9 +36,6 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'news',
     pathMatch: 'full',
-  }
-  // {
-  //   path: '',
-  //   component: HeaderComponent
-  // }
+  },
+
 ];
