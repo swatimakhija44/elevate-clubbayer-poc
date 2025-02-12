@@ -32,7 +32,6 @@ articles: any[] = [];
           // Now we get the training using the cached or new token
           this.trainingService.getTraining().subscribe(
             (trainData) => {
-              console.log("data", trainData)
               this.articles = trainData || [];
               
               this.loading = false;
