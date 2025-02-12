@@ -32,7 +32,7 @@ export class NewsComponent implements OnInit {
             (newsData) => {
               this.articles = newsData?.data || [];
               this.loading = false;
-              this.fetchImages(this.articles, token);
+              this.fetchImages(this.articles);
             },
             (error) => {
               console.error('Error fetching news:', error);
@@ -54,7 +54,7 @@ export class NewsComponent implements OnInit {
   }
 
   // Fetch images for the articles
-  fetchImages(newsItems: any[], token: string): void {
+  fetchImages(newsItems: any[]): void {
     const imageIds = newsItems.map((item) => item.relationships?.field_news_image?.data?.id);
     this.images = [];
 

@@ -4,7 +4,6 @@ import { TrainingComponent } from './training.component';
 import { TrainingService } from './training.service';
 import { HttpClientModule } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
-import { environment } from '../../environments/environments';
 
 describe('TrainingComponent', () => {
   let component: TrainingComponent;

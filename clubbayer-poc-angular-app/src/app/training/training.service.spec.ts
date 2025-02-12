@@ -69,8 +69,8 @@ describe('TrainingService', () => {
      service.getTraining().subscribe((train) => {
        expect(train).toEqual(mocktrainData);
      });
- 
-     const expectedUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/views/baych_ahcp_my_training_page/page`;
+    
+     const expectedUrl = `${environment.DRUPAL_BASE_URL}/api/training-sub-category/4?_format=json`;
      const req = httpMock.expectOne(expectedUrl);
      expect(req.request.method).toBe('GET');
      req.flush(mocktrainData);

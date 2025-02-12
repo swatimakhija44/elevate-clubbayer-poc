@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    DRUPAL_BASE_URL: "https://elevate.club.bayer.com",
+    DRUPAL_BASE_URL: "https://chains.club.bayer.ae",
     CLIENT_ID: 'ggvSore1AQMvobJSkmAmeNiIJncY3Hgf9CpamwpkBFM',
     CLIENT_SECRET: 'staff',
     USERNAME: 'Test_67120e72da859',

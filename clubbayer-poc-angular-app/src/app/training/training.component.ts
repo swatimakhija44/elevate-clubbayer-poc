@@ -13,32 +13,36 @@ export class TrainingComponent {
 articles: any[] = [];
   source: any[] = [];
   loading = true;
-  // images: string[] = [];
+  images: string[] = [];
   error: string | null = null;
 
   constructor(private trainingService: TrainingService) {}
 
   ngOnInit() {
     this.fetchArticles();
+    
   }
 
+  
   // Updated fetchArticles method using the new fetchCachedToken
   fetchArticles(): void {
     this.trainingService.fetchToken().subscribe(
       (token) => {
         if (token) {
-          // Now we get the news using the cached or new token
+          // Now we get the training using the cached or new token
           this.trainingService.getTraining().subscribe(
             (trainData) => {
               console.log("data", trainData)
-              this.articles = trainData?.data || [];
+              this.articles = trainData || [];
+              
               this.loading = false;
-              // this.fetchImages(this.articles, token);
+              this.fetchImages(this.articles);
+              // this.fetchGroupLink(this.articles)
             },
             (error) => {
-              console.error('Error fetching news:', error);
+              console.error('Error fetching training:', error);
               this.loading = false;
-              this.error = 'Failed to load news.';
+              this.error = 'Failed to load training.';
             }
           );
         } else {
@@ -54,22 +58,34 @@ articles: any[] = [];
     );
   }
 
-  // // Fetch images for the articles
-  // fetchImages(newsItems: any[], token: string): void {
-  //   const imageIds = newsItems.map((item) => item.relationships?.field_news_image?.data?.id);
-  //   this.images = [];
+   // Fetch images for the articles
+  fetchImages(trainingItems: any[]): void {
+    const imageIds = trainingItems.map((item) => item.field_learning_path_media_image[0]?.target_uuid);
+    this.images = [];
+    const metatitle = trainingItems.forEach((item) =>item.metatag.value.title)
+    this.trainingService.updateTitle(metatitle);
+    imageIds.forEach((id, index) => {
+      if (id) {
+        this.trainingService.getImageUrl(id).subscribe(
+          (response) => {
+            this.images[index] = response?.data?.attributes?.uri?.url || '';
+          },
+          (error) => {
+            console.error('Failed to load image', error);
+            this.images[index] = ''; // Handle failed image loading gracefully
+          }
+        );
+      }
+    });
+  }
 
-  //   imageIds.forEach((id, index) => {
+  // fetchGroupLink(trainingItems: any[]): void {
+  //   const trainingIds = trainingItems.map((item) =>item.id[0].value);
+  //   this.gplink = [];
+  //   trainingIds.forEach((id, index) => {
   //     if (id) {
-  //       this.newsService.getImageUrl(id).subscribe(
-  //         (response) => {
-  //           this.images[index] = response?.data?.attributes?.uri?.url || '';
-  //         },
-  //         (error) => {
-  //           console.error('Failed to load image', error);
-  //           this.images[index] = ''; // Handle failed image loading gracefully
-  //         }
-  //       );
+  //       this.gplink[index] = trainingIds;
+  //       console.log(this.gplink[index])
   //     }
   //   });
   // }

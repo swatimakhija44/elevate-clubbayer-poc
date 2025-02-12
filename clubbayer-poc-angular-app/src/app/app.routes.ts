@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { NewsComponent } from './news/news.component';
 import { TrainingComponent } from './training/training.component';
 import { MenuComponent } from './menu/menu.component';
+import { TrainingDetailComponent } from './training-detail/training-detail.component';
 
 export const routes: Routes = [
 
@@ -15,7 +16,21 @@ export const routes: Routes = [
   },
   {
     path: 'training',
-    component: TrainingComponent
+    component: TrainingComponent,
+    data: { 
+      title: 'My training sub-category carousel | Club Bayer', 
+      skipParentTitle: true 
+    }
+  },
+  // {
+  //   path: 'training-detail/:id',
+  //   component: TrainingDetailComponent,
+    
+  // },
+  {
+    path: 'group/:id',
+    component: TrainingDetailComponent,
+    
   },
   {
     path: '**',
