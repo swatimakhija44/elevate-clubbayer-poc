@@ -6,7 +6,7 @@ import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './cb-menu.component.html',
-  styleUrl: './cb-menu.component.scss'
+  styleUrl: './cb-menu.component.css'
 })
 export class CbMenuComponent implements OnInit {
 
