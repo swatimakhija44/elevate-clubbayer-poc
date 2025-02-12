@@ -4,10 +4,6 @@
     line-height: 3em;
 }
 
-/* a {
-    text-decoration: none;
-} */
-
 a:hover {
     color: #ff3162;
 }
@@ -71,7 +67,7 @@ a:hover {
     margin-top: 4em;
 }
 
-.copyRight{
+.copyRight {
     font-size: 11px;
     font-weight: 700;
     padding: 0px 13em;

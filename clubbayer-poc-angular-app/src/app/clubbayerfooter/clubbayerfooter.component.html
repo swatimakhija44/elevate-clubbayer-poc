@@ -4,15 +4,18 @@
     <div class="color2"></div>
     <div class="color3"></div>
   </div>
+
   <section class="firstSection">
-    <h1 *ngIf="footerMainenuItem.length > 0">
-      <span *ngFor="let item of footerMainenuItem; let last = last">
+    <h1 *ngIf="footerMainMenuItem.length > 0">
+      <span *ngFor="let item of footerMainMenuItem; let last = last">
         <a href="#" class="mainTitle">{{ item.mainTitle }}</a>
         <span *ngIf="!last" class="slashSymbol">/</span>
       </span>
     </h1>
-    <hr class="horizontalLine">
-    <div class="row" *ngIf="!loading && !error">
+
+    <hr class="horizontalLine" />
+
+    <div class="row">
       <div class="col-lg-3" *ngFor="let menuItem of footerMenuItem">
         <h2 class="title">{{ menuItem.title }}</h2>
         <p class="subTitleP" *ngFor="let subTitle of menuItem.belowTitles">
@@ -20,21 +23,13 @@
         </p>
       </div>
     </div>
-
     <div *ngIf="loading">Loading footer menu...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="!loading && error" class="error">{{ error }}</div>
   </section>
+
   <section class="secondSection">
-    <div *ngFor="let item of footerBlockItem">
-      <p class="text">{{ item.blockContent }}</p>
-    </div>
-    <!-- <p>{blockContent}</p> -->
-    <!-- <p class="text"> The information on this website is aimed exclusively at health professionals who dispense medicines
-      and therefore requires specialist training for correct interpretation. The information on the products offered on
-      this
-      website is only intended for health professionals resident in the Middle East. All training, challenges and other
-      content related to medicines, whether or not they are prescribed, will not entail the granting of any type of
-      discount, prize, gift or benefit to users.</p>
-    <p class="copyRight">Copyright 2024, Copyright © Bayer Middle East</p> -->
+      <div *ngFor="let item of footerBlockItem">
+        <p class="text">{{ item.blockContent }}</p>
+      </div>
   </section>
 </footer>

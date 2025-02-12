@@ -1,9 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ClubbayerfooterComponent } from './clubbayerfooter.component';
 import { FooterService } from '../service/footer.service';
 import { HttpClientModule } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 describe('ClubbayerfooterComponent', () => {
 
@@ -11,18 +10,24 @@ describe('ClubbayerfooterComponent', () => {
   let fixture: ComponentFixture<ClubbayerfooterComponent>;
   let mockFooterService: jasmine.SpyObj<FooterService>;
 
-  beforeEach(() => {
-    // Create a spy for the FooterService
-    mockFooterService = jasmine.createSpyObj('FooterService', ['fetchToken', 'getFooterMenuItems', 'getFooterPreMenu', 'getFooterBlockContent']);
+  beforeEach(async () => {
+    // Mock FooterService with spies
+    mockFooterService = jasmine.createSpyObj('FooterService', [
+      'fetchToken',
+      'getFooterMenuItems',
+      'getFooterPreMenu',
+      'getFooterBlockContent'
+    ]);
 
-    // Set up the TestBed
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
+      // imports: [CommonModule, HttpClientTestingModule], // Import necessary modules
+      // declarations: [ClubbayerfooterComponent], // Declare component
       imports: [HttpClientModule, ClubbayerfooterComponent],
-      providers: [
-        { provide: FooterService, useValue: mockFooterService },
-      ],
-    });
+      providers: [{ provide: FooterService, useValue: mockFooterService }] // Provide mock service
+    }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ClubbayerfooterComponent);
     component = fixture.componentInstance;
   });
@@ -31,80 +36,74 @@ describe('ClubbayerfooterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load articles successfully', () => {
-    const mockToken = 'fake-token';
-    const mockNewsData = {
-      data: [{ title: "title 1", below: [{ title: "subtitle 1", }] }]
-    };
+  it('should fetch footer data successfully', fakeAsync(() => {
+    // Mock successful token response
+    mockFooterService.fetchToken.and.returnValue(of('valid_token'));
 
-    mockFooterService.fetchToken.and.returnValue(of(mockToken));
-    mockFooterService.getFooterMenuItems.and.returnValue(of(mockNewsData));
+    // Mock footer service responses
+    mockFooterService.getFooterMenuItems.and.returnValue(of([{ title: 'Menu 1', below: [{ title: 'Submenu 1' }] }]));
+    mockFooterService.getFooterPreMenu.and.returnValue(of([{ title: 'Main Menu 1' }]));
+    mockFooterService.getFooterBlockContent.and.returnValue(
+      of({ data: { attributes: { body: { value: '<p>Footer Content</p>' } } } })
+    );
 
-    component.ngOnInit();
-    fixture.detectChanges();
-    expect(component.articles.length).toBe(1);
-    expect(component.articles[0].title).toBe('title 1');
+    component.ngOnInit(); // Trigger data fetch
+    tick(); // Simulate async completion
+
     expect(component.loading).toBeFalse();
-  });
+    // expect(component.error).toBeNull();
+    expect(component.footerMenuItem.length).toBe(1);
+    expect(component.footerMainMenuItem.length).toBe(1);
+    expect(component.footerBlockItem[0].blockContent).toBe('Footer Content'); // Ensuring HTML tags are removed
+  }));
 
-  it('should handle error when fetching token fails', () => {
-    mockFooterService.fetchToken.and.returnValue(throwError('Token error'));
+  it('should handle token fetch failure', fakeAsync(() => {
+    mockFooterService.fetchToken.and.returnValue(of(null)); // Simulating token failure
+
     component.ngOnInit();
-    fixture.detectChanges();
+    tick();
+
     expect(component.loading).toBeFalse();
     expect(component.error).toBe('Failed to retrieve a valid token.');
-  });
+  }));
 
-  it('should handle error when fetching news fails', () => {
-    const mockToken = 'fake-token';
-    mockFooterService.fetchToken.and.returnValue(of(mockToken));
-    mockFooterService.getFooterMenuItems.and.returnValue(throwError('News fetching error'));
+  it('should handle error during footer data fetch', fakeAsync(() => {
+    mockFooterService.fetchToken.and.returnValue(of('valid_token'));
+
+    // Simulating an API error for one of the requests
+    mockFooterService.getFooterMenuItems.and.returnValue(of([{ title: 'Menu 1' }]));
+    mockFooterService.getFooterPreMenu.and.returnValue(throwError(() => new Error('API error')));
+    mockFooterService.getFooterBlockContent.and.returnValue(of({}));
+
     component.ngOnInit();
-    fixture.detectChanges();
+    tick();
+
     expect(component.loading).toBeFalse();
-    expect(component.error).toBe('Failed to load news.');
+    expect(component.error).toBe('Failed to load footer data.');
+  }));
+
+  it('should transform menu items correctly', () => {
+    const mockData = [
+      { title: 'Menu 1', below: [{ title: 'Submenu 1' }, { title: 'Submenu 2' }] }
+    ];
+    const transformed = component['transformMenuItems'](mockData);
+
+    expect(transformed).toEqual([
+      { title: 'Menu 1', belowTitles: ['Submenu 1', 'Submenu 2'] }
+    ]);
   });
 
-  it('should fetch images for articles', () => {
-    const mockToken = '133';
-    const mockNewsData = {
-      data: [
-        {
-          relationships: { field_news_image: { data: { id: 'image-id' } } },
-          attributes: { title: 'Article 1', body: 'Content' },
-        },
-      ],
-    };
+  it('should extract block content correctly', () => {
+    const mockData = { data: { attributes: { body: { value: '<p>Test Content</p>' } } } };
+    const transformed = component['extractBlockContent'](mockData);
 
-    const mockImageData = {
-      data: { attributes: { uri: { url: `${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary` } } },
-    };
-    mockFooterService.fetchToken.and.returnValue(of(mockToken));
-    mockFooterService.getFooterMenuItems.and.returnValue(of(mockNewsData));
-    mockFooterService.getFooterPreMenu.and.returnValue(of(mockImageData));
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    // expect(component.images.length).toBe(1);
-    // expect(component.images[0]).toBe(`${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary`);
+    expect(transformed).toEqual([{ blockContent: 'Test Content' }]);
   });
 
-  it('should handle error when fetching image fails', () => {
-    const mockToken = 'fake-token';
-    const mockNewsData = {
-      data: [
-        {
-          relationships: { field_news_image: { data: { id: 'image-id' } } },
-          attributes: { title: 'Article 1', body: 'Content' },
-        },
-      ],
-    };
-    mockFooterService.fetchToken.and.returnValue(of(mockToken));
-    mockFooterService.getFooterMenuItems.and.returnValue(of(mockNewsData));
-    mockFooterService.getFooterPreMenu.and.returnValue(throwError('Image loading error'));
-    component.ngOnInit();
-    fixture.detectChanges();
-    // expect(component.images.length).toBe(1);
-    expect(component.error).toBeNull();
+  it('should handle errors correctly', () => {
+    component['handleError']('Test error message');
+
+    expect(component.loading).toBeFalse();
+    expect(component.error).toBe('Test error message');
   });
 });
