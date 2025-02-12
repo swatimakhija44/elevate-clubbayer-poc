@@ -9,7 +9,7 @@
       <div *ngIf="images[index]" style="margin: 10px">
         <img class="card-img-top" [src]="'https://chains.club.bayer.ae' + images[index]" alt="Image" style="width: 200px; height: auto" />
       </div>
-      <a [href] = "'/group/'+ article.id[0].value" target="blank">
+      <a [href] = "'https://angular-remote.vercel.app/group/'+ article.id[0].value" target="blank">
         <!-- <a href = "http://localhost:4202/training-detail/1" target="blank"> -->
           <h1  class="card-title">{{ article.label[0].value }}</h1>
         </a>
