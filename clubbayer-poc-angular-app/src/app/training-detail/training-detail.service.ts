@@ -1,27 +1,32 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environments';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { environment } from '../environments/environments';  // Ensure correct path
-import { catchError, switchMap } from 'rxjs/operators';
+import { Meta, Title } from '@angular/platform-browser';
+import { catchError, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class NewsService {
-  private tokenUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
-  private newsUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/node/news`;
-  private fileUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/file/mime_attachment_binary`;
+export class TrainingDetailService {
+private tokenUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
+  public trainUrl = `${environment.DRUPAL_BASE_URL}/group`;
+  public fileUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/media/image`;
 
   private TOKEN_CACHE: { accessToken: string | null, expiresAt: number | null } = {
     accessToken: null,
     expiresAt: null,
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private title: Title, private meta: Meta) {}
+
+  updateTitle(title: any) {
+    this.title.setTitle(title);
+  }
 
   // Fetch the cached token or request a new one if expired
   public fetchToken(): Observable<any> {
     const currentTime = Date.now();
+
     // Check if the cached token is valid
     if (this.TOKEN_CACHE.accessToken && this.TOKEN_CACHE.expiresAt && this.TOKEN_CACHE.expiresAt > currentTime) {
       console.log('Token is coming from cache...');
@@ -54,23 +59,25 @@ export class NewsService {
     );
   }
 
-  // Get news using the access token
-  getNews(): Observable<any> {
+  // Get training using the access token
+  getTraining(id:any): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
-        return this.http.get(this.newsUrl, { headers });
+        return this.http.get(`${this.trainUrl}/${id}?_format=json`, { headers });
       })
     );
   }
 
   // Get image URL using the access token
-  getImageUrl(id: string): Observable<any> {
+  getImageUrl(id: any): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
-        return this.http.get(`${this.fileUrl}/${id}`, { headers });
+        return this.http.get(`${this.fileUrl}/${id}/field_media_image`, { headers });
       })
     );
   }
+  
+
 }

@@ -1,0 +1,26 @@
+<!-- news.component.html -->
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<div *ngIf="!loading && !error">
+  <ul class="d-flex justify-content-between">
+    <!-- Loop through each article in trainingdetail array -->
+    <li  class="card text-bg-light card-body border-secondary mb-3" style=" list-style: none">
+      <div *ngIf="images" style="margin: 10px; position: relative;">
+        <img class="card-img-top" [src]="'https://chains.club.bayer.ae' + images" alt="Image" style=" height: auto" />
+      
+      <div class = "border border-white rounded-1 border-1 overlaytext">
+      <span class = "dark">{{trainingdetail.field_learning_path_user_rating[0].value}}</span>
+      <span>{{trainingdetail.field_learning_path_duration[0].value}}</span>
+      
+      <button type="button" class="btn btn-danger btn-arrow-right">Start</button>
+    </div>
+  </div>
+      <h1 class="card-title">{{ trainingdetail.label[0].value }}</h1>
+      
+      <p class="card-text text-gray-700" [innerHTML]="trainingdetail.field_learning_path_description[0]?.value">
+        {{ trainingdetail.field_learning_path_description[0]?.value }}
+      </p>
+    </li>
+  </ul>
+</div>
