@@ -5,6 +5,6 @@ export const environment = {
     PASSWORD:'User@09876',
     GRANT_TYPE:'password',
     SCOPE:'staff',
-    DRUPAL_BASE_URL:'https://elevate.club.bayer.com'
+    DRUPAL_BASE_URL:'https://chains.club.bayer.ae'
 };
   
