@@ -8,7 +8,7 @@ import { Meta, Title } from '@angular/platform-browser';
   providedIn: 'root'
 })
 export class TrainingService {
- private tokenUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
+  private tokenUrl = `${environment.DRUPAL_BASE_URL}/oauth/token`;
   private trainUrl = `${environment.DRUPAL_BASE_URL}/api/training-sub-category/4?_format=json`;
   private fileUrl = `${environment.DRUPAL_BASE_URL}/jsonapi/media/image`;
 
@@ -17,7 +17,7 @@ export class TrainingService {
     expiresAt: null,
   };
 
-  constructor(private http: HttpClient, private title: Title, private meta: Meta) {}
+  constructor(private http: HttpClient, private title: Title, private meta: Meta) { }
 
   updateTitle(title: any) {
     this.title.setTitle(title);
@@ -78,16 +78,4 @@ export class TrainingService {
       })
     );
   }
-  
-
-  // getGroupLinkUrl(id: string): Observable<any> {
-  //   return this.fetchToken().pipe(
-  //     switchMap((token) => {
-  //       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
-  //       return this.http.get(`${this.groupUrl}/${id}`, { headers });
-  //     })
-  //   );
-  // }
-// }
-
 }
