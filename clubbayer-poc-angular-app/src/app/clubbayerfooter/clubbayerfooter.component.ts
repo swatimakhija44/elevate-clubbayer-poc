@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FooterService } from '../service/footer.service';
 import { forkJoin } from 'rxjs';
 
+
 @Component({
   selector: 'app-clubbayerfooter',
   standalone: true,
