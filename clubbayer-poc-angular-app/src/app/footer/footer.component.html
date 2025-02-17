@@ -1,1 +1,35 @@
-<p>footer works!</p>
+<footer>
+    <div class="three-color-line">
+        <div class="color1"></div>
+        <div class="color2"></div>
+        <div class="color3"></div>
+    </div>
+
+    <section class="firstSection">
+        <h1 *ngIf="footerMainMenuItem.length > 0">
+            <span *ngFor="let item of footerMainMenuItem; let last = last">
+                <a href="#" class="mainTitle">{{ item.mainTitle }}</a>
+                <span *ngIf="!last" class="slashSymbol">/</span>
+            </span>
+        </h1>
+
+        <hr class="horizontalLine" />
+
+        <div class="row">
+            <div class="col-lg-3" *ngFor="let menuItem of footerMenuItem">
+                <h2 class="title">{{ menuItem.title }}</h2>
+                <p class="subTitleP" *ngFor="let subTitle of menuItem.belowTitles">
+                    <a href="#" class="subTitle">{{ subTitle }}</a>
+                </p>
+            </div>
+        </div>
+        <div *ngIf="loading">Loading footer menu...</div>
+        <div *ngIf="!loading && error" class="error">{{ error }}</div>
+    </section>
+
+    <section class="secondSection">
+        <div *ngFor="let item of footerBlockItem">
+            <p class="text">{{ item.blockContent }}</p>
+        </div>
+    </section>
+</footer>
