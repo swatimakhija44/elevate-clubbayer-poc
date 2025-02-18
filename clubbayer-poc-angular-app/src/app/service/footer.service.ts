@@ -61,7 +61,7 @@ export class FooterService {
   getFooterMenuItems(): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
         return this.http.get(this.footerMenuItemsUrl, { headers });
       })
     );
@@ -71,7 +71,7 @@ export class FooterService {
   getFooterPreMenu(): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
         return this.http.get(this.footerPreMenuUrl, { headers });
       })
     );
@@ -79,7 +79,7 @@ export class FooterService {
   getFooterBlockContent(): Observable<any> {
     return this.fetchToken().pipe(
       switchMap((token) => {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('X-Skip-Interceptor', 'true');
         return this.http.get(this.footerBlockContentUrl, { headers });
       })
     );
