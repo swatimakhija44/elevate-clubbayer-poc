@@ -5,11 +5,12 @@ import { MenuComponent } from './menu/menu.component';
 import { HeaderComponent } from './header/header.component'
 import { TrainingComponent } from './training/training.component';
 import { FooterComponent } from './footer/footer.component';
+import { CbHeaderComponent } from './cb-header/cb-header.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NewsComponent, MenuComponent, HeaderComponent, TrainingComponent, FooterComponent],
+  imports: [RouterOutlet, NewsComponent, MenuComponent, HeaderComponent, TrainingComponent, FooterComponent, CbHeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
