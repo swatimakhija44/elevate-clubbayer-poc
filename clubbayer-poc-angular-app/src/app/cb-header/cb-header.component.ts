@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './cb-header.component.css'
 })
 export class CbHeaderComponent {
-
+  constructor() { }
 }

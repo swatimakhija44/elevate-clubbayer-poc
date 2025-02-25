@@ -6,7 +6,8 @@ module.exports = withModuleFederationPlugin({
   exposes: {
     './routes': './src/app/app.routes.ts',
     './menu': './src/app/menu/menu.component.ts',
-    './footer': './src/app/footer/footer.component.ts'
+    './footer': './src/app/footer/footer.component.ts',
+    './header': './src/app/cb-header/cb-header.component.ts'
   },
 
   shared: {

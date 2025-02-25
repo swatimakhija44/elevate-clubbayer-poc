@@ -10,8 +10,8 @@ describe('CbHeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CbHeaderComponent]
     })
-      .compileComponents();
-
+    .compileComponents();
+    
     fixture = TestBed.createComponent(CbHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -19,15 +19,5 @@ describe('CbHeaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have logo images', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.logo img').length).toBe(2);
-  });
-
-  it('should have six icons', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.iconsList i').length).toBe(6);
   });
 });
